@@ -1,0 +1,166 @@
+<%- include('./partials/header'); %>
+
+<%- include('./partials/navbar'); %>
+
+<a href="<%= `/menuitems/${ item.menuItemId }` %>">Back to Menu Item</a>
+
+<h4 class="text-center"><%= item.name %></h4>
+<br />
+
+<div class="card">
+    <form action="/items/update" method="POST">
+        <div class="card-header text-center"><h5>General</h5></div>
+        <div class="card-body">
+            <table class="table">
+                <thead class="text-center">
+                    <tr>
+                        <th style="width: 50%;">Info</th>
+                        <th style="width: 50%;">Update</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <h6>Name:</h6>
+                            <p><%= item.name %></p>
+                        </td>
+                        <td>
+                            <h6 class="text-right">Name:</h6>
+                            <input name="name" type="text" class="form-control" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h6>Description:</h6>
+                            <p><%= item.description %></p>
+                        </td>
+                        <td>
+                            <h6 class="text-right">Description:</h6>
+                            <textarea name="description" class="form-control"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h6>Calories:</h6>
+                            <p>Fats: <%= item.calories.fats %></p>
+                            <p>Carbs: <%= item.calories.carbs %></p>
+                            <p>Proteins: <%= item.calories.proteins %></p>
+                        </td>
+                        <td>
+                            <h6 class="text-right">Calories:</h6>
+                            <input placeholder="fats.." name="fats" type="text" class="form-control" />
+                            <input placeholder="carbs.." name="carbs" type="text" class="form-control" />
+                            <input placeholder="proteins.." name="proteins" type="text" class="form-control" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <input name="id" value="<%= item.id %>" type="hidden" required />
+        <div class="card-footer text-center"><input class="btn btn-success" type="submit" value="Update" /></div>
+    </form>
+</div>
+
+<hr />
+
+<div class="card">
+        
+            <div class="card-header text-center"><h5>Allergens</h5></div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 50%;">List</th>
+                            <th style="width: 50%;">Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ol>
+                                    <% allergens.map(allergen => { %>
+                                        <li>
+                                            <form action="/items/allergens/delete" method="POST">
+                                                <input name="id" type="hidden" value="<%= allergen.id %>" required />
+                                                <p><%= allergen.name %> | <input type="submit" value="Delete" /></p>
+                                            </form>
+                                        </li>
+                                    <% }) %>
+                                </ol>
+                            </td>
+                            <td>
+                                <form action="/items/allergens/add" method="POST">
+                                    <label>Add new allergens:</label>
+                                    <input name="allergens" type="text" class="form-control" />
+                                    <p>(Enter list of allergens separated by commas in the input field above)</p>
+                                    <input name="itemId" value="<%= item.id %>" type="hidden" required />
+                                    <p class="text-center">
+                                        <input class="btn btn-success" type="submit" value="Update" />
+                                    </p>
+                                </form>                 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    </div>
+
+    <hr />
+
+    <div class="card">
+        <div class="card-header text-center"><h5>Images</h5></div>
+        <div class="card-body">
+            <div>
+                <p class="text-center">Main profile image</p>
+                <img class="mx-auto d-block img-fluid" alt="<%= item.name %>" src="<%= item.image %>" />
+            </div>
+            <br />
+            <p class="text-center">Other images</p>
+            <div id="itemImagesBox">
+                <div>
+                    <img class="mx-auto d-block img-fluid" alt="<%= item.name %>" src="<%= item.image %>" />
+                </div>
+                <div>
+                    <img class="mx-auto d-block img-fluid" alt="<%= item.name %>" src="<%= item.image %>" />
+                </div>
+                <div>
+                    <img class="mx-auto d-block img-fluid" alt="<%= item.name %>" src="<%= item.image %>" />
+                </div>
+                <div>
+                    <img class="mx-auto d-block img-fluid" alt="<%= item.name %>" src="<%= item.image %>" />
+                </div>  
+            </div>
+            <div>
+                <hr />
+                <p class="text-center">Add image</p>
+                <div>
+                    <img class="mx-auto d-block" id="updateItemImgPreview" />
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-sm-4"></div>
+                    <div class="col-sm-4 text-center">
+                        <form action="/items/image" method="POST">
+                            <input onchange="addImg(event, 'updateItemImg')" type="file" accept="image/*" required />
+                            <input name="itemId" value="<%= item.id %>" type="hidden" required />
+                            <input name="alt" value="<%= item.name %>" type="hidden" required />
+                            <input name="url" id="updateItemImgUrl" value="" type="hidden" required />
+                            <br /><br />
+                            <input class="btn btn-success" type="submit" value="Upload" />
+                        </form>
+                    </div>
+                    <div class="col-sm-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+<%- include('./partials/footer'); %>

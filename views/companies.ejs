@@ -1,0 +1,68 @@
+<%- include('./partials/header'); %>
+
+<%- include('./partials/navbar'); %>
+
+<h4 class="text-center">Companies</h4>
+<div class="row">
+    <div class="col-sm-6">
+        <h6>List of available companies</h6>
+        <ol>
+            <% companies.map(company => { %>
+                <li><a href="<%= `/companies/${ company.id }` %>"><%= company.name %></a></li>
+            <% }) %>
+        </ol>
+    </div>
+    <div class="col-sm-6">
+        <h6 class="text-right">Add new</h6>
+        <form action="/companies" method="POST">
+            <label>Category (required)</label>
+            <select class="form-control" name="categoryId" required >
+                <option value=""> --- </option>
+                <% categories.map(category => { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                <% }) %>
+            </select>
+            <hr />
+            <label>Name (required)</label>
+            <input class="form-control" name="name" type="text" required />
+            <hr />
+            <label>Description (required)</label>
+            <textarea class="form-control" name="description" required ></textarea>
+            <hr />
+            <label>Address (required)</label>
+            <input class="form-control" name="address" type="text" required />
+            <hr />
+            <label>Website</label>
+            <input class="form-control" name="website" type="text" />
+            <hr />
+            <label>Phone (required)</label>
+            <input class="form-control" name="phone" type="text" required />
+            <hr />
+            <label>Instagram</label>
+            <input class="form-control" name="instagram" type="text" />
+            <hr />
+            <label>Facebook</label>
+            <input class="form-control" name="facebook" type="text" />
+            <hr />
+            <label>Latitude (required)</label>
+            <input class="form-control" name="lat" type="text" required />
+            <hr />
+            <label>Longtitude (required)</label>
+            <input class="form-control" name="lng" type="text" required />
+            <hr />
+            <label>Profile Image (required)</label>
+            <div>
+                <img class="mx-auto d-block img-fluid" id="addCompanyPreview" />
+            </div>
+            <br />
+            <input class="form-control" type="file" accept="image/*" onchange="addImg(event, 'addCompany')" required />
+            <input id="addCompanyUrl" name="image" type="hidden" value="" required />
+            <br />
+            <p class="text-center">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </p>
+        </form>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>

@@ -1,0 +1,35 @@
+<%- include('./partials/header'); %>
+
+<%- include('./partials/navbar'); %>
+
+<h4 class="text-center">Categories</h4>
+<div class="row">
+    <div class="col-sm-6">
+        <h6>List of available categories</h6>
+        <ol>
+            <% categories.map(category => { %>
+                <li><a href="<%= `/categories/${ category.id }` %>"><%= category.name %></a></li>
+            <% }) %>
+        </ol>
+    </div>
+    <div class="col-sm-6">
+        <h6 class="text-right">Add new</h6>
+        <form action="/categories" method="POST">
+            <label>Name</label>
+            <input class="form-control" name="name" type="text" required />
+            <br />
+            <label>Icon</label>
+            <div>
+                <img class="mx-auto d-block img-fluid" id="addCategoryPreview" />
+            </div>
+            <input class="form-control" type="file" accept="image/*" onchange="addImg(event, 'addCategory')" required />
+            <input id="addCategoryUrl" name="icon" type="hidden" value="" />
+            <hr />
+            <p class="text-center">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </p>
+        </form>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>

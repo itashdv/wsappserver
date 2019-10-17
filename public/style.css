@@ -1,0 +1,17 @@
+.flexBox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.flexBoxItem {
+    margin: 20px;
+}
+
+.itemBoxImage {
+    max-height: 150px;
+}
+
+.underlined {
+    text-decoration: underline;
+}

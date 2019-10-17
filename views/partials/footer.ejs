@@ -1,0 +1,41 @@
+</div>
+<script defer>
+
+    // const openImg = (event, name) => {
+    //     let input = event.target;
+    //     let reader = new FileReader();
+    //     reader.onload = () => {
+    //         let dataURL = reader.result;
+    //         let output = document.getElementById(`${ name }Preview`);
+    //         let url = document.getElementById(`${ name }Url`);
+    //         url.value = dataURL;
+    //         output.src = dataURL;
+    //     };
+    //     reader.readAsDataURL(input.files[0]);
+    // };
+
+    const addImg = (event, name) => {
+        const input = event.target;
+        const reader = new FileReader();
+        reader.onload = () => {
+            const dataURL = reader.result;
+            const output = document.getElementById(`${ name }Preview`);
+            const url = document.getElementById(`${ name }Url`);
+            url.value = dataURL;
+            output.src = dataURL;
+        };
+        reader.readAsDataURL(input.files[0]);
+    };
+
+    document.onreadystatechange = () => {
+        if (document.readyState == 'interactive') {
+
+            // console.log(document.cookie);
+            // alert(document.cookie);
+
+        };
+    };
+
+</script>
+</body>
+</html>

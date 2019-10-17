@@ -1,0 +1,136 @@
+<%- include('./partials/header'); %>
+
+<%- include('./partials/navbar'); %>
+
+<h4 class="text-center"><%= company.name %></h4>
+<div class="row">
+    <div class="col-sm-6">
+        <h6>Company info</h6>
+        <span class="underlined">Category:</span>
+        <p><%= categoryName %></p>
+        <span class="underlined">Name:</span>
+        <p><%= company.name %></p>
+        <span class="underlined">Description:</span>
+        <p><%= company.description %></p>
+        <span class="underlined">Address:</span>
+        <p><%= company.address %></p>
+        <span class="underlined">Website:</span>
+        <p><%= company.website %></p>
+        <span class="underlined">Phone:</span>
+        <p><%= company.phone %></p>
+        <span class="underlined">Instagram:</span>
+        <p><%= company.instagram %></p>
+        <span class="underlined">Facebook:</span>
+        <p><%= company.facebook %></p>
+        <span class="underlined">Latitude:</span>
+        <p><%= company.lat %></p>
+        <span class="underlined">Longtitude:</span>
+        <p><%= company.lng %></p>
+        <hr />
+        <div class="card card-body">
+            <h6>Delete company</h6>
+            <form action="/companies/delete" method="POST">
+                <input name="confirm" type="text" class="form-control" placeholder="enter numbers from 1 to 5 here.." />
+                <input name="id" type="hidden" value="<%= company.id %>" />
+                <br />
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </form>
+        </div>
+    </div>
+    <div class="col-sm-6">
+        <h6 class="text-right">Update info</h6>
+        <form action="/companies/update" method="POST">
+            <label>Category</label>
+            <select class="form-control" name="categoryId" >
+                <option value=""> --- </option>
+                <% categories.map(category => { %>
+                    <option value="<%= category.id %>"><%= category.name %></option>
+                <% }) %>
+            </select>
+            <hr />
+            <label>Name</label>
+            <input class="form-control" name="name" type="text" />
+            <hr />
+            <label>Description</label>
+            <textarea class="form-control" name="description"></textarea>
+            <hr />
+            <label>Address</label>
+            <input class="form-control" name="address" type="text" />
+            <hr />
+            <label>Website</label>
+            <input class="form-control" name="website" type="text" />
+            <hr />
+            <label>Phone</label>
+            <input class="form-control" name="phone" type="text" />
+            <hr />
+            <label>Instagram</label>
+            <input class="form-control" name="instagram" type="text" />
+            <hr />
+            <label>Facebook</label>
+            <input class="form-control" name="facebook" type="text" />
+            <hr />
+            <label>Latitude</label>
+            <input class="form-control" name="lat" type="text" />
+            <hr />
+            <label>Longtitude</label>
+            <input class="form-control" name="lng" type="text" />
+            <input name="id" type="hidden" value="<%= company.id %>" />
+            <br />
+            <p class="text-center">
+                <input class="btn btn-success" type="submit" value="Update" />
+            </p>
+        </form>
+    </div>
+</div>
+
+<div>
+    <h6 class="text-center">Images</h6>
+    <p class="text-center">Main profile image</p>
+    <div>
+        <img alt="<%= company.name %>" src="<%= company.image.url %>" class="mx-auto d-block img-fluid" />
+    </div>
+    <br />
+    <p class="text-center">Other images</p>
+    <div class="flexBox">
+        <% images.map(image => { %>
+            <div class="flexBoxItem text-center">
+                <img src="<%= image.url %>" alt="<%= image.id %>" class="mx-auto d-block itemBoxImage" />
+                <br />
+                <form action="/companies/deleteimg" method="POST">
+                    <input name="id" type="hidden" value="<%= image.id %>" />
+                    <input name="itemId" type="hidden" value="<%= company.id %>" />
+                    <input type="submit" value="Delete" />
+                </form>
+                <br />
+                <form action="/companies/setasprofileimg" method="POST">
+                    <input name="id" type="hidden" value="<%= image.id %>" />
+                    <input name="itemId" type="hidden" value="<%= company.id %>" />
+                    <input type="submit" value="Set as profile image" />
+                </form>
+            </div>
+        <% }) %>
+    </div>
+    <br />
+    <p class="text-center">Add image</p>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div>
+                <img id="addCompanyImagePreview" class="mx-auto d-block img-fluid" />
+            </div>
+            <br />
+            <form action="/companies/image" method="POST">
+                <input name="image" onchange="addImg(event, 'addCompanyImage')" type="file" accept="image/*" class="form-control" required />
+                <input name="itemId" type="hidden" value="<%= company.id %>" required />
+                <input name="url" id="addCompanyImageUrl" type="hidden" value="" required />
+                <br />
+                <p class="text-center">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </p>
+            </form>
+        </div>
+        <div class="col-sm-3"></div>
+    </div>
+</div>
+
+<%- include('./partials/footer'); %>

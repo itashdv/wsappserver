@@ -1,0 +1,32 @@
+<%- include('./partials/header'); %>
+
+<div class="row">
+    <div class="col-sm-4"></div>
+    <div class="col-sm-4">
+        <hr />
+        <form action="/signup" method="POST">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h3>Sign up</h3>
+                    <a href="/login">Login</a>
+                </div>
+                <div class="card-body text-center">
+                    <label>Name</label>
+                    <input class="form-control" name="name" type="text" required />
+                    <label>Email</label>
+                    <input class="form-control" name="email" type="email" required />
+                    <label>Password</label>
+                    <input class="form-control" name="password" type="password" required />
+                    <label>Repeat password</label>
+                    <input class="form-control" name="password2" type="password" required />
+                </div>
+                <div class="card-footer text-center">
+                    <input class="btn btn-primary" type="submit" value="Sign up" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-sm-4"></div>
+</div>
+
+<%- include('./partials/footer'); %>

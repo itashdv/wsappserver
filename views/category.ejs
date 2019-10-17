@@ -1,0 +1,54 @@
+<%- include('./partials/header'); %>
+
+<%- include('./partials/navbar'); %>
+
+<h4 class="text-center"><%= category.name %></h4>
+<div class="row">
+    <div class="col-sm-6">
+        <form action="/categories/update" method="POST">
+            <h6>Name:</h6>
+            <p><%= category.name %></p>
+            <input class="form-control" placeholder="type here to update category's name.." name="name" type="text" />
+            <hr />
+            <h6>Icon:</h6>
+            <img
+                id="updateCategoryPreview"
+                src="<%= category.icon.url %>"
+                alt="<%= category.icon.alt %>"
+                class="img-fluid"
+                style="max-height: 150px;"
+            />
+            <br /><br />
+            <p>Choose file to update the icon..</p>
+            <input class="form-control" type="file" accept="image/*" onchange="addImg(event, 'updateCategory')" />
+            <input id="updateCategoryUrl" name="icon" type="hidden" value="" />
+            <input name="id" type="hidden" value="<%= category.id %>" required />
+            <br />
+            <input class="btn btn-success" type="submit" value="update" />
+        </form>
+        <form action="/categories/delete" method="POST">
+            <hr />
+            <h6>Delete category</h6>
+            <p>(note that you can only delete categories that currently do not contain companies)</p>
+            <input name="confirm" class="form-control" placeholder="type numbers from 1 to 5 here.." type="text" required />
+            <br />
+            <input name="id" type="hidden" value="<%= category.id %>" required />
+            <input class="btn btn-danger" type="submit" value="delete" />
+        </form>
+        <br />
+    </div>
+    <div class="col-sm-6">
+        <h6 class="text-right">List of companies in a category:</h6>
+        <ol>
+            <% companies.map(company => { %>
+                <li><a href="<%= `/companies/${ company.id }` %>"><%= company.name %></a></li>
+            <% }) %>
+        </ol>
+    </div>
+</div>
+
+
+
+
+
+<%- include('./partials/footer'); %>
