@@ -1,16 +1,16 @@
 const express = require('express');
 
 // requiring controllers..
-const Menu = require('../controllers/menu');
-const MenuCategory = require('../controllers/menucategory');
+const MenuCategory = require('../controllers/menuCategory');
+const MenuItem = require('../controllers/menuItem');
 
 const router = express.Router();
 
 router.get('/:id', async (req, res) => {
     if (req.params.id) {
-        const menu = await Menu.getById(req.params.id);
-        const menuCategories = await MenuCategory.getByMenu(req.params.id);
-        res.render('menu', { menu, menuCategories });
+        const menuCategory = await MenuCategory.getById(req.params.id);
+        const menuItems = await MenuItem.getByCategory(req.params.id);
+        res.render('menuCategory', { menuCategory, menuItems });
     } else {
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
@@ -18,8 +18,8 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    if (req.body.companyId && req.body.name && req.body.description && req.body.image) {
-        await Menu.add(req.body);
+    if (req.body.menuId && req.body.name && req.body.description && req.body.image) {
+        await MenuCategory.add(req.body);
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
     } else {
@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
 
 router.post('/update', async (req, res) => {
     if (req.body.id) {
-        await Menu.update(req.body);
+        await MenuCategory.update(req.body);
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
     } else {
@@ -40,17 +40,17 @@ router.post('/update', async (req, res) => {
 router.post('/delete', async (req, res) => {
     if (req.body.id && req.body.confirm) {
         if (req.body.confirm === '12345') {
-            const result = await Menu.delete(req.body.id);
+            const result = await MenuCategory.delete(req.body.id);
             if (!result) {
-                res.send('Cannot delete Menu: it contains Menu Categories! Please delete the Menu Categories and try again!');
+                res.send('Cannot delete Menu Category: it contains Menu Items! Please delete the Menu Items and try again!');
             } else {
-                res.redirect(`/companies/${ result }`);
+                res.redirect(`/menus/${ result }`);
             }
         } else {
             res.send('Delete confirmation code is wrong!');
         }
     } else {
-        res.send('Confirmation code and ID are required for delete!');
+        res.send('Menu Category ID and correct confirmation code (12345) are required for delete!');
     }
 });
 

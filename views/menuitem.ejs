@@ -2,103 +2,137 @@
 
 <%- include('./partials/navbar'); %>
 
-<h2 class="text-center"><%= menuItem.name %></h2>
+<a href="<%= `/menucategories/${ menuItem.menuCategoryId }` %>">Back to Menu Category</a>
+
+<h4 class="text-center"><%= menuItem.name %></h4>
+
 <div class="row">
-    <div class="col-6 text-left">
-        <a href="<%= `/menus/${ menuItem.menuId }` %>">Back to Menu</a>
-    </div>
-    <div class="col-6 text-right">
-        <button class="btn btn-primary" data-toggle="collapse" data-target="#menuItemOptions">Options</button>
-    </div>
-</div>
-<div id="menuItemOptions" class="collapse">
-    <div class="row">
-        <div class="col-md-6">
-            <h3 class="text-center">Update menu item</h3>
-            <div style="border: 1px solid #c3c3c3; border-radius: 5px; margin: 10px; padding: 20px;">
-                <form action="/menuitems/update" method="POST">
-                    <label>Name</label>
-                    <input class="form-control" name="name" type="text" />
-                    <br />
-                    <label>Description</label>
-                    <textarea class="form-control" name="description"></textarea>
-                    <br />
-                    <label>Image</label>
-                    <div>
-                        <img class="mx-auto d-block" style="max-height: 250px;" id="addMenuItemPreview" />
-                    </div>
-                    <input class="form-control" type="file" accept="image/*" onchange="openImg(event, 'addMenuItem')" />
-                    <input id="addMenuItemUrl" name="image" type="hidden" value="" />
-                    <input name="id" type="hidden" value="<%= menuItem.id %>" />
-                    <br />
-                    <p class="text-center"><input class="btn btn-success" type="submit" value="Update" /></p>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h3 class="text-center">Delete menu item</h3>
-            <div style="border: 1px solid #c3c3c3; border-radius: 5px; margin: 10px; padding: 20px;">
-                <form action="/menuitems/delete" method="POST">
-                    <label>Type numbers from 1 to 5..</label>
-                    <input class="form-control" name="confirm" type="text" required />
-                    <input name="id" type="hidden" value="<%= menuItem.id %>" />
-                    <input name="menuId" type="hidden" value="<%= menuItem.menuId %>" />
-                    <br />
-                    <p class="text-center"><input class="btn btn-danger" type="submit" value="Delete" /></p>
-                </form>
-            </div>
+    <div class="col-sm-6">
+        <h5 class="text-center">Info</h5>
+        <h6>Name</h6>
+        <p><%= menuItem.name %></p>
+        <h6>Description</h6>
+        <p><%= menuItem.description %></p>
+        <h6>Calories</h6>
+        <p>fats: <%= menuItem.calories.fats %></p>
+        <p>carbs: <%= menuItem.calories.carbs %></p>
+        <p>proteins: <%= menuItem.calories.proteins %></p>
+        <div class="card card-body">
+            <h6>Delete Menu Item</h6>
+            <form action="/menuitems/delete" method="POST">
+                <input name="confirm" type="text" class="form-control" placeholder="enter numbers from 1 to 5 here.." />
+                <input name="id" type="hidden" value="<%= menuItem.id %>" />
+                <input name="menuCategoryId" type="hidden" value="<%= menuItem.menuCategoryId %>" />
+                <br />
+                <input type="submit" value="Delete" class="btn btn-danger" />
+            </form>
         </div>
     </div>
+    <div class="col-sm-6">
+        <h5 class="text-center">Update Info</h5>
+        <form action="/menuitems/update" method="POST">
+            <h6 class="text-right">Name</h6>
+            <input name="name" type="text" class="form-control" />
+            <br />
+            <h6 class="text-right">Description</h6>
+            <textarea name="description" class="form-control"></textarea>
+            <br />
+            <h6 class="text-right">Calories</h6>
+            <input name="fats" type="text" class="form-control" placeholder="fats.." />
+            <input name="carbs" type="text" class="form-control" placeholder="carbs.." />
+            <input name="proteins" type="text" class="form-control" placeholder="proteins.." />
+            <input name="id" value="<%= menuItem.id %>" type="hidden" required />
+            <br />
+            <p class="text-center">
+                <input type="submit" value="Update" class="btn btn-success" />
+            </p>
+        </form>
+    </div>
 </div>
+
 <hr />
-<div class="row">
-    <div class="col-md-6 text-center">
-        <h5>Name:</h5>
-        <h4><%= menuItem.name %></h4>
-        <hr />
-        <h5>Description:</h5>
-        <h4><%= menuItem.description %></h4>
-    </div>
-    <div class="col-md-6 text-center">
-        <h5>Image:</h5>
-        <div>
-            <img class="mx-auto d-block" style="max-height: 250px;" src="<%= menuItem.image %>" />
-        </div>
-    </div>
-</div>
-<hr />
+
 <div>
-    <h4 class="text-center">Items</h4>
+    <h5 class="text-center">Allergens</h5>
     <div class="row">
-        <div class="col-md-6">
-            <h5 class="text-center">List of currently available items:</h5>
+        <div class="col-sm-6">
+            <h6>List</h6>
             <ol>
-                <% items.map(item => { %>
-                    <li><a href="<%= `/items/${ item.id }` %>"><%= item.name %></a></li>
+                <% allergens.map(allergen => { %>
+                    <li>
+                        <form action="/menuitems/allergen/delete" method="POST">
+                            <input name="id" value="<%= allergen.id %>" type="hidden" required />
+                            <span><%= allergen.name %></span> | 
+                            <input value="delete" type="submit" />
+                            <br /><br />
+                        </form>
+                    </li>
                 <% }) %>
             </ol>
         </div>
-        <div class="col-md-6">
-            <h5 class="text-center">Add new item:</h5>
-            <p>You can add extra information(calories, allergens and extra images) after creating the item.</p>
-            <form action="/items" method="POST">
+        <div class="col-sm-6">
+            <h6 class="text-right">Add new</h6>
+            <form action="/menuitems/allergen" method="POST">
                 <label>Name</label>
-                <input class="form-control" name="name" type="text" required />
-                <label>Description</label>
-                <textarea class="form-control" name="description" required ></textarea>
-                <label>Image</label>
-                <div>
-                    <img class="mx-auto d-block" style="max-height: 250px;" id="addItemImgPreview" />
-                </div>
-                <input class="form-control" type="file" accept="image/*" onchange="addImg(event, 'addItemImg')" required />
-                <input id="addItemImgUrl" name="image" type="hidden" value="" required />
-                <input type="hidden" name="menuItemId" value="<%= menuItem.id %>" required />
+                <input name="name" type="text" class="form-control" />
+                <input name="itemId" value="<%= menuItem.id %>" type="hidden" required />
                 <br />
                 <p class="text-center">
-                    <input class="btn btn-primary" value="Add" type="submit" />
+                    <input type="submit" value="Add" class="btn btn-primary" />
                 </p>
             </form>
         </div>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <h5 class="text-center">Images</h5>
+    <p class="text-center">Main Profile Image</p>
+    <div>
+        <img alt="<%= menuItem.name %>" src="<%= menuItem.image.url %>" class="mx-auto d-block img-fluid" />
+    </div>
+    <p class="text-center">Other images</p>
+    <div class="flexBox">
+        <% images.map(image => { %>
+            <div class="flexBoxItem text-center">
+                <img src="<%= image.url %>" alt="<%= image.id %>" class="mx-auto d-block itemBoxImage" />
+                <br />
+                <form action="/menuitems/deleteimg" method="POST">
+                    <input name="id" type="hidden" value="<%= image.id %>" required />
+                    <input name="itemId" type="hidden" value="<%= menuItem.id %>" required />
+                    <input type="submit" value="Delete" />
+                </form>
+                <br />
+                <form action="/menuitems/setasprofileimg" method="POST">
+                    <input name="id" type="hidden" value="<%= image.id %>" required />
+                    <input name="itemId" type="hidden" value="<%= menuItem.id %>" required />
+                    <input type="submit" value="Set as profile image" />
+                </form>
+            </div>
+        <% }) %>
+    </div>
+    <br />
+    <p class="text-center">Add image</p>
+    <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+            <div>
+                <img id="addMenuItemImagePreview" class="mx-auto d-block img-fluid" />
+            </div>
+            <br />
+            <form action="/menuitems/image" method="POST">
+                <input onchange="addImg(event, 'addMenuItemImage')" type="file" accept="image/*" class="form-control" required />
+                <input name="itemId" type="hidden" value="<%= menuItem.id %>" required />
+                <input name="url" id="addMenuItemImageUrl" type="hidden" value="" required />
+                <br />
+                <p class="text-center">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </p>
+            </form>
+        </div>
+        <div class="col-sm-3"></div>
     </div>
 </div>
 

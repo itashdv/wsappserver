@@ -2,103 +2,75 @@
 
 <%- include('./partials/navbar'); %>
 
-<h2 class="text-center"><%= menu.name %></h2>
+<a href="<%= `/companies/${ menu.companyId }` %>">Back to Company</a>
+
+<h4 class="text-center"><%= menu.name %></h4>
+
 <div class="row">
-    <div class="col-6 text-left">
-        <a href="<%= `/companies/${ menu.companyId }` %>">Back to Company</a>
+    <div class="col-sm-6">
+        <form action="/menus/update" method="POST">
+            <h6>Name:</h6>
+            <p><%= menu.name %></p>
+            <input name="name" class="form-control" placeholder="type here to update menu's name.." type="text" />
+            <hr />
+            <h6>Description:</h6>
+            <p><%= menu.description %></p>
+            <textarea name="description" class="form-control" placeholder="type here to update menu's description.."></textarea>
+            <hr />
+            <h6>Image:</h6>
+            <img
+                id="updateMenuPreview"
+                src="<%= menu.image.url %>"
+                class="img-fluid"
+                style="max-height: 150px;"
+            />
+            <br /><br />
+            <p>Choose file to update the image..</p>
+            <input class="form-control" type="file" accept="image/*" onchange="addImg(event, 'updateMenu')" />
+            <input id="updateMenuUrl" name="image" type="hidden" value="" />
+            <input name="id" type="hidden" value="<%= menu.id %>" required />
+            <br />
+            <input class="btn btn-success" type="submit" value="update" />
+        </form>
+        <form action="/menus/delete" method="POST">
+            <hr />
+            <h6>Delete menu</h6>
+            <p>(note that you can only delete Menus that currently do not contain Menu Categories)</p>
+            <input name="confirm" class="form-control" placeholder="type numbers from 1 to 5 here.." type="text" required />
+            <br />
+            <input name="id" type="hidden" value="<%= menu.id %>" required />
+            <input class="btn btn-danger" type="submit" value="delete" />
+        </form>
+        <br />
     </div>
-    <div class="col-6 text-right">
-        <button class="btn btn-primary" data-toggle="collapse" data-target="#menuOptions">Options</button>
-    </div>
-</div>
-<div id="menuOptions" class="collapse">
-    <div class="row">
-        <div class="col-md-6">
-            <h3 class="text-center">Update menu</h3>
-            <div style="border: 1px solid #c3c3c3; border-radius: 5px; margin: 10px; padding: 20px;">
-                <form action="/menus/update" method="POST">
-                    <label>Name</label>
-                    <input class="form-control" name="name" type="text" />
-                    <br />
-                    <label>Description</label>
-                    <textarea class="form-control" name="description"></textarea>
-                    <br />
-                    <label>Image</label>
-                    <div>
-                        <img class="mx-auto d-block" style="max-height: 250px;" id="updateMenuPreview" />
-                    </div>
-                    <input class="form-control" type="file" accept="image/*" onchange="openImg(event, 'updateMenu')" />
-                    <input id="updateMenuUrl" name="image" type="hidden" value="" />
-                    <input name="id" type="hidden" value="<%= menu.id %>" />
-                    <br />
-                    <p class="text-center"><input class="btn btn-success" type="submit" value="Update" /></p>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <h3 class="text-center">Delete menu</h3>
-            <div style="border: 1px solid #c3c3c3; border-radius: 5px; margin: 10px; padding: 20px;">
-                <form action="/menus/delete" method="POST">
-                    <label>Type numbers from 1 to 5..</label>
-                    <input class="form-control" name="confirm" type="text" required />
-                    <input name="id" type="hidden" value="<%= menu.id %>" />
-                    <input name="companyId" type="hidden" value="<%= menu.companyId %>" />
-                    <br />
-                    <p class="text-center"><input class="btn btn-danger" type="submit" value="Delete" /></p>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-<hr />
-<div class="row">
-    <div class="col-md-6 text-center">
-        <h5>Name:</h5>
-        <h4><%= menu.name %></h4>
+    <div class="col-sm-6">
+        <h6 class="text-right">List of menu categories:</h6>
+        <ol>
+            <% menuCategories.map(category => { %>
+                <li><a href="<%= `/menucategories/${ category.id }` %>"><%= category.name %></a></li>
+            <% }) %>
+        </ol>
         <hr />
-        <h5>Description:</h5>
-        <h4><%= menu.description %></h4>
-    </div>
-    <div class="col-md-6 text-center">
-        <h5>Image:</h5>
-        <div>
-            <img class="mx-auto d-block" style="max-height: 250px;" src="<%= menu.image %>" />
-        </div>
-    </div>
-</div>
-<hr />
-<div>
-    <h4 class="text-center">Menu Items</h4>
-    <div class="row">
-        <div class="col-md-6">
-            <h5 class="text-center">List of currently available menu items:</h5>
-            <ol>
-                <% menuItems.map(item => { %>
-                    <li><a href="<%= `/menuitems/${ item.id }` %>"><%= item.name %></a></li>
-                <% }) %>
-            </ol>
-        </div>
-        <div class="col-md-6">
-            <h5 class="text-center">Add new menu item:</h5>
-            <form action="/menuitems" method="POST">
-                <label>Name</label>
-                <input class="form-control" name="name" type="text" required />
-                <label>Description</label>
-                <textarea class="form-control" name="description" required ></textarea>
-                <br />
-                <label>Image</label>
-                <div>
-                    <img class="mx-auto d-block" style="max-height: 250px;" id="addMenuItemPreview" />
-                </div>
-                <input class="form-control" type="file" accept="image/*" onchange="openImg(event, 'addMenuItem')" required />
-                <input id="addMenuItemUrl" name="image" type="hidden" value="" required />
-                <input type="hidden" name="menuId" value="<%= menu.id %>" />
-                <br />
-                <p class="text-center">
-                    <input class="btn btn-primary" value="Add" type="submit" />
-                </p>
-            </form>
-        </div>
+        <h6 class="text-right">Add new Menu Category:</h6>
+        <form action="/menucategories" method="POST">
+            <input name="menuId" value="<%= menu.id %>" type="hidden" required />
+            <label>Name</label>
+            <input name="name" type="text" class="form-control" required />
+            <br />
+            <label>Description</label>
+            <textarea name="description" class="form-control" required></textarea>
+            <br />
+            <div>
+                <img id="addMenuCategoryPreview" class="mx-auto d-block img-fluid" />
+            </div>
+            <br />
+            <input onchange="addImg(event, 'addMenuCategory')" type="file" accept="image/*" class="form-control" />
+            <input id="addMenuCategoryUrl" name="image" value="" type="hidden" required />
+            <br />
+            <p class="text-center">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </p>
+        </form>
     </div>
 </div>
 

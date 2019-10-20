@@ -1,14 +1,16 @@
 const express = require('express');
-const MenuItem = require('../models/menuItem');
-const Item = require('../models/item');
+const MenuItem = require('../controllers/menuItem');
+const Allergen = require('../controllers/allergen');
+const Img = require('../controllers/img');
 
 const router = express.Router();
 
 router.get('/:id', async (req, res) => {
     if (req.params.id) {
-        const menuItem = await MenuItem.findById(req.params.id);
-        const items = await Item.find({ menuItemId: req.params.id });
-        res.render('menuitem', { menuItem, items });
+        const menuItem = await MenuItem.getById(req.params.id);
+        const allergens = await Allergen.getByItem(req.params.id);
+        const images = await Img.get(req.params.id);
+        res.render('menuItem', { menuItem, allergens, images });
     } else {
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
@@ -16,16 +18,10 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    if (req.body.menuId && req.body.name && req.body.description && req.body.image) {
-        const { menuId, name, description, image } = req.body;
-        const menuItem = new MenuItem({
-            menuId,
-            name,
-            description,
-            image
-        });
-        await menuItem.save();
-        res.redirect(`/menus/${ menuId }`);
+    if (req.body.menuCategoryId && req.body.name && req.body.description && req.body.image) {
+        await MenuItem.add(req.body);
+        const backURL = req.header('Referer') || '/';
+        res.redirect(backURL);
     } else {
         res.send('All fields are required!');
     }
@@ -33,34 +29,78 @@ router.post('/', async (req, res) => {
 
 router.post('/update', async (req, res) => {
     if (req.body.id) {
-        const { id, name, description, image } = req.body;
-        let menuItem = await MenuItem.findById(id);
-        menuItem.name = name === '' ? menuItem.name : name;
-        menuItem.description = description === '' ? menuItem.description : description;
-        menuItem.image = image === '' ? menuItem.image : image;
-        await menuItem.save();
+        await MenuItem.update(req.body);
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
     } else {
-        res.send('ID is required!');
+        res.send('ID is required for update!');
+    }
+});
+
+router.post('/allergen', async (req, res) => {
+    if (req.body.itemId) {
+        await Allergen.add(req.body);
+        const backURL = req.header('Referer') || '/';
+        res.redirect(backURL);
+    } else {
+        res.send('Item ID is required!');
+    }
+});
+
+router.post('/allergen/delete', async (req, res) => {
+    if (req.body.id) {
+        await Allergen.delete(req.body.id);
+        const backURL = req.header('Referer') || '/';
+        res.redirect(backURL);
+    } else {
+        res.send('ID is required for delete!');
+    }
+});
+
+router.post('/image', async (req, res) => {
+    if (req.body.itemId && req.body.url) {
+        await Img.add(req.body);
+        const backURL = req.header('Referer') || '/';
+        res.redirect(backURL);
+    } else {
+        res.send('ID and image URL are required!');
+    }
+});
+
+router.post('/deleteimg', async (req, res) => {
+    if (req.body.id && req.body.itemId) {
+        const result = await Img.deleteFromMenuItem(req.body);
+        if (result) {
+            const backURL = req.header('Referer') || '/';
+            res.redirect(backURL);
+        } else {
+            res.send('Cannot delete Profile Image!');
+        }
+    } else {
+        res.redirect(`/menuitems/${ req.body.itemId }`);
+    }
+});
+
+router.post('/setasprofileimg', async (req, res) => {
+    if (req.body.id && req.body.itemId) {
+        await Img.setProfileImageMenuItem(req.body);
+        const backURL = req.header('Referer') || '/';
+        res.redirect(backURL);
+    } else {
+        res.redirect(`/menuitems/${ req.body.itemId }`);
     }
 });
 
 router.post('/delete', async (req, res) => {
-    if (req.body.id && req.body.menuId && req.body.confirm) {
+    if (req.body.id && req.body.menuCategoryId && req.body.confirm) {
         if (req.body.confirm === '12345') {
-            const docs = await Item.find({ menuItemId: req.body.id });
-            if (docs.length === 0) {
-                await MenuItem.deleteOne({ _id: req.body.id });
-                res.redirect(`/menus/${ req.body.menuId }`);
-            } else {
-                res.send('Cannot delete menu item: it contains items! Please delete the items and try again!');
-            }
+            await MenuItem.delete(req.body.id);
+            res.redirect(`/menucategories/${ req.body.menuCategoryId }`);
         } else {
             res.send('Delete confirmation code is wrong!');
         }
     } else {
-        res.send('All fields are required!');
+        res.send('All fields are required for delete!');
     }
 });
 

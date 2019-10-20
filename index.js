@@ -39,12 +39,12 @@ const checkAuth = require('./utils/checkAuth');
 // models..
 const Admin = require('./models/admin');
 
-// requiring routes..
+// requiring routers..
 const Category = require('./routers/category');
 const Company = require('./routers/company');
-// const Menu = require('./routers/menu');
-// const MenuItem = require('./routers/menuItem');
-// const Item = require('./routers/Item');
+const Menu = require('./routers/menu');
+const MenuCategory = require('./routers/menuCategory');
+const MenuItem = require('./routers/menuItem');
 
 // main page..
 app.get('/', checkAuth, async (req, res) => {
@@ -127,9 +127,9 @@ app.get('/logout', (req, res) => {
 // mounting routes..
 app.use('/categories', checkAuth, Category);
 app.use('/companies', checkAuth, Company);
-// app.use('/menus', checkAuth, Menu);
-// app.use('/menuitems', checkAuth, MenuItem);
-// app.use('/items', checkAuth, Item);
+app.use('/menus', checkAuth, Menu);
+app.use('/menucategories', checkAuth, MenuCategory);
+app.use('/menuitems', checkAuth, MenuItem);
 
 app.get('*', (req, res) => {
     res.send(`

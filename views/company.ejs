@@ -97,14 +97,14 @@
                 <img src="<%= image.url %>" alt="<%= image.id %>" class="mx-auto d-block itemBoxImage" />
                 <br />
                 <form action="/companies/deleteimg" method="POST">
-                    <input name="id" type="hidden" value="<%= image.id %>" />
-                    <input name="itemId" type="hidden" value="<%= company.id %>" />
+                    <input name="id" type="hidden" value="<%= image.id %>" required />
+                    <input name="itemId" type="hidden" value="<%= company.id %>" required />
                     <input type="submit" value="Delete" />
                 </form>
                 <br />
                 <form action="/companies/setasprofileimg" method="POST">
-                    <input name="id" type="hidden" value="<%= image.id %>" />
-                    <input name="itemId" type="hidden" value="<%= company.id %>" />
+                    <input name="id" type="hidden" value="<%= image.id %>" required />
+                    <input name="itemId" type="hidden" value="<%= company.id %>" required />
                     <input type="submit" value="Set as profile image" />
                 </form>
             </div>
@@ -130,6 +130,43 @@
             </form>
         </div>
         <div class="col-sm-3"></div>
+    </div>
+</div>
+
+<hr />
+
+<div>
+    <h6 class="text-center">Menus</h6>
+    <div class="row">
+        <div class="col-sm-6">
+            <p>List of available menus in a company</p>
+            <ol>
+                <% menus.map(menu => { %>
+                    <li><a href="<%= `/menus/${ menu.id }` %>"><%= menu.name %></a></li>
+                <% }) %>
+            </ol>
+        </div>
+        <div class="col-sm-6">
+            <p class="text-right">Add new menu</p>
+            <form action="/menus" method="POST">
+                <input name="companyId" value="<%= company.id %>" type="hidden" required />
+                <label>Name</label>
+                <input name="name" type="text" class="form-control" required />
+                <label>Description</label>
+                <textarea name="description" class="form-control" required></textarea>
+                <label>Image</label>
+                <div>
+                    <img id="addMenuPreview" class="mx-auto d-block img-fluid" />
+                </div>
+                <br />
+                <input onchange="addImg(event, 'addMenu')" accept="image/*" type="file" class="form-control" />
+                <input name="image" id="addMenuUrl" value="" type="hidden" required />
+                <br />
+                <p class="text-center">
+                    <input type="submit" value="Add" class="btn btn-primary" />
+                </p>
+            </form>
+        </div>
     </div>
 </div>
 

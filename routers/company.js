@@ -4,6 +4,7 @@ const express = require('express');
 const Company = require('../controllers/company');
 const Category = require('../controllers/category');
 const Img = require('../controllers/img');
+const Menu = require('../controllers/menu');
 
 const router = express.Router();
 
@@ -19,7 +20,8 @@ router.get('/:id', async (req, res) => {
         const categoryName = await Category.getName(company.categoryId);
         const categories = await Category.get();
         const images = await Img.get(req.params.id);
-        res.render('company', { company, categoryName, categories, images });
+        const menus = await Menu.getByCompany(req.params.id);
+        res.render('company', { company, categoryName, categories, images, menus });
     } else {
         res.redirect('/companies');
     }
@@ -55,12 +57,13 @@ router.post('/image', async (req, res) => {
 
 router.post('/deleteimg', async (req, res) => {
     if (req.body.id && req.body.itemId) {
-        const result = await Img.delete(req.body);
+        const result = await Img.deleteFromCompany(req.body);
         if (result) {
             const backURL = req.header('Referer') || '/';
             res.redirect(backURL);
+        } else {
+            res.send('Cannot delete Profile Image!');
         }
-        res.send('Cannot delete Profile Image!');
     } else {
         res.redirect('/companies');
     }
@@ -68,7 +71,7 @@ router.post('/deleteimg', async (req, res) => {
 
 router.post('/setasprofileimg', async (req, res) => {
     if (req.body.id && req.body.itemId) {
-        await Img.setProfile(req.body);
+        await Img.setProfileImageCompany(req.body);
         const backURL = req.header('Referer') || '/';
         res.redirect(backURL);
     } else {
