@@ -45,6 +45,7 @@ const Company = require('./routers/company');
 const Menu = require('./routers/menu');
 const MenuCategory = require('./routers/menuCategory');
 const MenuItem = require('./routers/menuItem');
+const API = require('./routers/api');
 
 // main page..
 app.get('/', checkAuth, async (req, res) => {
@@ -130,6 +131,7 @@ app.use('/companies', checkAuth, Company);
 app.use('/menus', checkAuth, Menu);
 app.use('/menucategories', checkAuth, MenuCategory);
 app.use('/menuitems', checkAuth, MenuItem);
+app.use('/api', API);
 
 app.get('*', (req, res) => {
     res.send(`
