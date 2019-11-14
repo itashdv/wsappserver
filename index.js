@@ -140,6 +140,6 @@ app.get('*', (req, res) => {
     `);
 });
 
-app.listen(port, function() {
+app.listen(port, "0.0.0.0", function() {
     console.log(`Server started on port ${ port }`);
 });
